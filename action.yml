@@ -1,0 +1,44 @@
+name: Regress Scan
+description: Start a Regress scan of your web app after a deploy, and optionally fail the job on a regression.
+author: regressapp
+branding:
+  icon: check-circle
+  color: green
+
+inputs:
+  project-id:
+    description: Regress project ID. The deploy webhook URL in Project settings contains it.
+    required: true
+  webhook-secret:
+    description: Deploy webhook secret from Project settings in Regress. Store it as a GitHub secret.
+    required: true
+  wait-for-result:
+    description: Wait until the scan finishes and fail the job on a regression.
+    required: false
+    default: "false"
+  timeout-minutes:
+    description: How long to wait for the scan when wait-for-result is true.
+    required: false
+    default: "20"
+  api-url:
+    description: Regress API base URL.
+    required: false
+    default: https://api.regress.app
+
+outputs:
+  check-run-id:
+    description: ID of the scan that was started, or of the scan already running for the project.
+  status:
+    description: Scan status. Without wait-for-result this is the status at the time of the request.
+  pages-checked:
+    description: Pages checked. Only set when wait-for-result is true.
+  change-count:
+    description: Changes found. Only set when wait-for-result is true.
+  flows-tested:
+    description: Flows tested. Only set when wait-for-result is true.
+  flows-failed:
+    description: Flows that failed. Only set when wait-for-result is true.
+
+runs:
+  using: node24
+  main: index.js
